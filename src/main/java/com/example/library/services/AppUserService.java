@@ -24,7 +24,6 @@ public class AppUserService {
     @Cacheable(value = "libraryCache")
     public List<AppUser> findAll(){
         log.info("Request to find all users.");
-        log.warn("TEST - Should not be shown for 10sec after first cache");
         return appUserRepository.findAll();
     }
 

@@ -1,6 +1,5 @@
 package com.example.library.controllers;
 
-import com.example.library.entities.AppUser;
 import com.example.library.entities.Book;
 import com.example.library.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class BookController {
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
     @PostMapping
-    public ResponseEntity<Book> save(@RequestBody Book book){
+    public ResponseEntity<Book> save(@Validated @RequestBody Book book){
         return ResponseEntity.ok(bookService.save(book));
     }
 

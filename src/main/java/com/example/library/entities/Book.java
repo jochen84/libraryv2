@@ -1,6 +1,5 @@
 package com.example.library.entities;
 
-import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.ISBN;
 import org.springframework.data.annotation.Id;
@@ -10,7 +9,6 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-@Builder //Använder inte denna?
 public class Book implements Serializable {
 
     private static final long serialVersionUID = 1578783440421245204L;

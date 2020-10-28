@@ -5,6 +5,7 @@ import com.example.library.services.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,13 +31,13 @@ public class AppUserController {
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
     @PostMapping
-    public ResponseEntity<AppUser> save(@RequestBody AppUser appUser){
+    public ResponseEntity<AppUser> save(@Validated @RequestBody AppUser appUser){
         return ResponseEntity.ok(appUserService.save(appUser));
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN", "ROLE_USER"})
     @PutMapping("/{id}")
-    public void userUpdate(@PathVariable String id, @RequestBody AppUser appUser){
+    public void userUpdate(@PathVariable String id,@Validated @RequestBody AppUser appUser){
         appUserService.update(id, appUser);
     }
 
