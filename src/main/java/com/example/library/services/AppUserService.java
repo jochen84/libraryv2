@@ -28,11 +28,11 @@ public class AppUserService {
     }
 
     public AppUser findById(String id){
+        log.info(String.format("Request to find user with id: %s", id));
         return appUserRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find a user with that id"));
     }
 
-    //Används i MyUserDetailsService för inloggning
     public AppUser findByUsername(String username){
         return appUserRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find a user with that username"));
@@ -48,24 +48,22 @@ public class AppUserService {
             log.error("Could not find any user with that id");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find any user with that id");
         }
-        var isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().toUpperCase().equals("ROLE_ADMIN"));
-        var isLibrarian = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().toUpperCase().equals("ROLE_LIBRARIAN"));
         var isSuperman = checkAuthority("ADMIN") || checkAuthority("LIBRARIAN");
         var isCurrentUser = SecurityContextHolder.getContext().getAuthentication().getName().toLowerCase().equals(appUser.getUsername().toLowerCase());
         if (!isSuperman && !isCurrentUser){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not authorized to do this! Can only update your own details. *Admin/Librarian can update all");
         }
+        log.info(String.format("%s was updated", appUser.getUsername()));
         appUser.setId(id);
         appUserRepository.save(appUser);
     }
 
     public void delete(String id){
         if (!appUserRepository.existsById(id)){
+            log.error("Could not find any user with that id");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find a user with that id");
         }
-        //log.info(String.format("User with id: % was deleted", id));
+        log.info(String.format("User with id: % was deleted", id));
         appUserRepository.deleteById(id);
     }
 
